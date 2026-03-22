@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoboDog VR Monitoring System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+
+    <div class="w-[1600px] h-[900px] flex bg-white shadow-2xl rounded-lg overflow-hidden">
+        <!-- Left Image Panel (65%) -->
+        <div class="w-[65%] flex items-center justify-center bg-gray-200 p-8">
+            <div class="relative w-full h-full flex items-center justify-center overflow-hidden">
+                <img src="./image/RoboDog monitoring in VR/download_image0.png" alt="RoboDog monitoring in VR" class="object-cover w-full h-full rounded-lg shadow-md" />
+                <!-- Editorial Frame Overlay -->
+                <div class="absolute inset-0 border-4 border-gray-400 rounded-lg pointer-events-none"></div>
+            </div>
+        </div>
+
+        <!-- Right Content Panel (35%) -->
+        <div class="w-[35%] flex flex-col justify-between p-12 bg-gray-50">
+            <!-- Top-left Title Zone -->
+            <div class="mb-auto">
+                <div class="w-20 h-1 bg-teal-500 mb-4 rounded-full"></div> <!-- Accent bar -->
+                <h1 class="text-4xl font-bold text-blue-900 leading-tight mb-2">RoboDog monitoring in VR</h1>
+                <h2 class="text-xl text-gray-700 font-medium">RoboDog VR Monitoring System</h2>
+            </div>
+
+            <!-- Body Text (three-short-paragraphs) -->
+            <div class="flex-grow my-8 space-y-6 text-gray-800 text-lg leading-relaxed">
+                <p>On 12.2.2026, student team members S. Reponen, L. Fagerholm, and L. Tao presented a wireless 360-degree video system transmitting from a Go2 robot dog to VR-glasses for the RoboFleet project.</p>
+                <p>The modular setup utilizes an Insta360 X4 camera and Raspberry Pi 5 to allow safe remote monitoring of dangerous production areas without pausing work.</p>
+                <p>Partial funding for this third part of the RoboDog project was granted by the Regional Council of Satakunta under EU Structural Policy Projects.</p>
+            </div>
+
+            <!-- Bottom Section: QR Code and Branding Ribbon -->
+            <div class="mt-auto flex flex-col items-end">
+                <!-- QR Zone (bottom-right-card) -->
+                <div class="bg-white p-4 rounded-lg shadow-md border border-gray-200 flex items-center space-x-4 mb-8 self-end">
+                    <img src="./image/RoboDog monitoring in VR/qr_code.png" alt="QR Code" class="w-24 h-24 object-contain" />
+                    <p class="text-gray-700 text-sm font-semibold">Learn more</p>
+                </div>
+
+                <!-- Branding Placement (bottom-dual-logo-ribbon) -->
+                <div class="w-full bg-blue-900 p-4 flex justify-around items-center">
+                    <img src="./examplate_template/logo/roboai_logo.png" alt="ROBOAI Logo" class="h-8 object-contain" />
+                    <img src="./examplate_template/logo/samk_logo.png" alt="SAMK Logo" class="h-8 object-contain" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
