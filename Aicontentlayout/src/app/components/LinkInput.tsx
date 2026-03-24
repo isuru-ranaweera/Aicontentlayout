@@ -10,17 +10,79 @@ export function LinkInput() {
   const [isGenerating, setIsGenerating] = useState(false);
   const navigate = useNavigate();
 
-  const handleGenerate = async () => {
-    if (!url.trim()) return;
+  // const handleGenerate = async () => {
+  //   if (!url.trim()) return;
 
-    setIsGenerating(true);
-    // Simulate AI processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    
-    // Store the URL and navigate to layout selection
+  //   setIsGenerating(true);
+
+  //   try {
+  //     const response = await fetch("http://127.0.0.1:8000/generate", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ link: url }),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error("Failed to send link to backend");
+  //     }
+
+  //     const data = await response.json();
+  //     console.log("Backend response:", data);
+
+  //     sessionStorage.setItem("contentUrl", url);
+  //     sessionStorage.setItem("backendResponse", JSON.stringify(data));
+
+  //     navigate("/layouts");
+  //   } catch (error) {
+  //     console.error("Error sending data to backend:", error);
+  //   } finally {
+  //     setIsGenerating(false);
+  //   }
+  // };
+
+  const handleGenerate = async () => {
+  console.log("Generate button clicked");
+  console.log("URL value:", url);
+
+  if (!url.trim()) {
+    console.log("URL is empty");
+    return;
+  }
+
+  setIsGenerating(true);
+
+  try {
+    console.log("Sending request to backend...");
+
+    const response = await fetch("http://127.0.0.1:8000/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ link: url }),
+    });
+
+    console.log("Response received:", response);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Backend response data:", data);
+
     sessionStorage.setItem("contentUrl", url);
+    sessionStorage.setItem("backendResponse", JSON.stringify(data));
+
     navigate("/layouts");
-  };
+  } catch (error) {
+    console.error("Error sending data to backend:", error);
+  } finally {
+    setIsGenerating(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-400 to-red-400 flex items-center justify-center p-3 md:p-6">
@@ -30,7 +92,7 @@ export function LinkInput() {
             <Sparkles className="w-8 h-8 md:w-10 md:h-10 text-white" />
           </div>
           <h1 className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-            AI Layout Generator
+            **AI Layout Generator**
           </h1>
           <p className="text-gray-700 text-sm md:text-lg">
             Paste a link to your content and our AI will generate 5 unique layouts for your TV display

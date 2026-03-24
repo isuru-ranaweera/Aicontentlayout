@@ -12,20 +12,52 @@ export function LinkInput() {
   const [inputMode, setInputMode] = useState<"url" | "file">("url");
   const navigate = useNavigate();
 
-  const handleGenerate = async () => {
-    if (!url.trim() && !uploadedFile) return;
+  // const handleGenerate = async () => {
+  //   if (!url.trim() && !uploadedFile) return;
+
+  //   setIsGenerating(true);
+  //   // Simulate AI processing
+  //   await new Promise((resolve) => setTimeout(resolve, 2000));
+    
+  //   // Store the content source and navigate to layout selection
+  //   if (inputMode === "url") {
+  //     sessionStorage.setItem("contentUrl", url);
+  //   } else {
+  //     sessionStorage.setItem("contentFile", uploadedFile?.name || "");
+  //   }
+  //   navigate("/layouts");
+  // };
+
+   const handleGenerate = async () => {
+    if (!url.trim()) return;
 
     setIsGenerating(true);
-    // Simulate AI processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    
-    // Store the content source and navigate to layout selection
-    if (inputMode === "url") {
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ link: url }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send link to backend");
+      }
+
+      const data = await response.json();
+      console.log("Backend response:", data);
+
       sessionStorage.setItem("contentUrl", url);
-    } else {
-      sessionStorage.setItem("contentFile", uploadedFile?.name || "");
+      sessionStorage.setItem("backendResponse", JSON.stringify(data));
+
+      navigate("/layouts");
+    } catch (error) {
+      console.error("Error sending data to backend:", error);
+    } finally {
+      setIsGenerating(false);
     }
-    navigate("/layouts");
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
