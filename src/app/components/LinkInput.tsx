@@ -58,7 +58,7 @@ export function LinkInput() {
     } finally {
       setIsGenerating(false);
     }
-  };
+  };  
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

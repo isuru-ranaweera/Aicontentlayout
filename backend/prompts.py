@@ -35,30 +35,33 @@ You are an expert image selection agent for RoboAI Academy.
 
 Task:
 You will receive:
-1. A summary of the topic/content
-2. 2 to 5 candidate images with their file names
+1. A topic summary
+2. 2–5 candidate images with file names
 
-Your job is to select the single best image that matches the topic summary.
+Select the ONE image that best represents the FULL topic.
 
-Selection criteria:
-- relevance to the topic
-- educational/professional suitability for RoboAI Academy
-- visual clarity
-- image quality
-- whether the image clearly represents robotics, AI, learning, research, or technology when appropriate
-- avoid irrelevant, blurry, low-quality, overly generic, or misleading images
+Priority (most important → least):
+1. Overall relevance to the full topic (NOT just presence of robots)
+2. Match with the real-world context described (e.g., kitchen, food prep, environment)
+3. Educational/professional suitability
+4. Clarity and quality
 
-Rules:
-- Choose only one best image
-- Return only the image file name
-- Do not explain
-- Do not return any extra text
+Important rules:
+- Do NOT prefer an image just because a robot is clearly visible
+- Prefer images that represent the actual scenario described in the summary
+- If the topic is about a system/environment (e.g., kitchen workflow), prioritize that over close-up robot shots
+- Avoid generic or misleading visuals
 
-Here is topic summmary 
+Output rules:
+- Return ONLY the file name
+- No explanation
+- No extra text
+
+Topic summary:
 {summary}
-
-
 """
+
+
 defining_layout_prompt = """### SYSTEM ROLE
 You are a Senior Frontend Engineer specialized in premium fixed-slide HTML composition.
 
@@ -143,10 +146,10 @@ If the provided summary is already in the required language, preserve it closely
 ### ASSETS TO USE
 Use these exact paths exactly as written:
 
-- Main Project Image: {main_project_image}
-- QR Code Image: {qr_code_path}
-- ROBOAI Logo: ./examplate_template/logo/roboai_logo.png
-- SAMK Logo: ./examplate_template/logo/samk_logo.png
+- Main Project Image: .{main_project_image}
+- QR Code Image: ../{qr_code_path}
+- ROBOAI Logo: ../examplate_template/logo/roboai_logo.png
+- SAMK Logo: ../examplate_template/logo/samk_logo.png
 
 ### IMAGE RULES
 1. Do not use placeholders, stock images, dummy images, or AI-generated images.

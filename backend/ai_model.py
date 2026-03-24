@@ -15,8 +15,8 @@ load_dotenv()
 import time
 import json
 from langchain_google_genai import ChatGoogleGenerativeAI
-
-
+import playwright 
+from playwright.sync_api import sync_playwright
 client=genai.Client()
 summarize_template=ChatPromptTemplate(
     [
@@ -37,7 +37,6 @@ selecting_image_template=ChatPromptTemplate(
         ("human","{input}")
     ]
 )
-
 
 agent_2=ChatOllama(model=ollama_model_vl)
 
@@ -145,7 +144,19 @@ layout_template=ChatPromptTemplate(
 
 layout_chain=layout_template|gemini
 
+
+def render_and_get_screenshot(file_path,output_path):
+    file_url=f"file://{os.path.abspath(file_path)}"
+    with sync_playwright() as p:
+        browser=p.firefox.launch(headless=True)
+        page=browser.new_page()
+        
+        page.goto(file_url)
+        page.screenshot(path=output_path, full_page=True)
+        browser.close()
+
 def define_the_templay_out(link):
+    print("working")
     history_layout=[]
     global layout_chain,layout_variant_chain
     
@@ -158,22 +169,33 @@ def define_the_templay_out(link):
             {"history":history_layout,"input":summary}
             
         )
-        
-        
 
         history_layout.append(AIMessage(variance_respone.content))
         print(variance_respone.content)
     
-        time.sleep(70)
         layout_response=layout_chain.invoke({"summary":summary,"input":message.content,
         "layout_spec":variance_respone.content,
         "content_language":summary["language"],
         "main_project_image":os.path.join(image_path,image),
         "qr_code_path":os.path.join(image_path,"qr_code.png")
         })
-        time.sleep(70)
         
         print(layout_response.content)
+        
+        html_file=layout_response.content
+        os.makedirs("./website_file",exist_ok=True)
+        html_file_path="./website_file/index.html"
+
+        with open(html_file_path,"w") as f:
+            f.write(html_file)
+            
+        powerpoint_path=os.path.join(image_path,"powerpoint")
+        os.makedirs(powerpoint_path,exist_ok=True)
+        render_and_get_screenshot(html_file_path,os.path.join(powerpoint_path,f"slide_{str(i)}.png"))
+            
+            
+        
+        
         
     
     
