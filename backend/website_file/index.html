@@ -1,66 +1,120 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Robotic Ergonomics in Kitchens - RoboAI Academy</title>
+    <title>Tutkitaan Robottihitsauksella tehokkuutta teollisuuteen</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Open Sans', sans-serif;
+        }
+        .font-serif {
+            font-family: 'Merriweather', serif;
+        }
+        /* Custom background for 'quiet-texture' */
+        .bg-quiet-texture {
+            background-color: #2d2d32; /* Base for warmgray-navy */
+            background-image: radial-gradient(circle at 10% 20%, rgba(57, 57, 57, 0.08) 0%, rgba(57, 57, 57, 0.08) 50%, rgba(20, 20, 20, 0.08) 50%, rgba(20, 20, 20, 0.08) 100%), linear-gradient(to bottom right, #3f3f46, #2d2d32);
+        }
+        /* Geometric accent corners using pseudo-elements */
+        .geometric-accent-corner-top-left::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 25px;
+            height: 25px;
+            border-top: 3px solid var(--copper-color);
+            border-left: 3px solid var(--copper-color);
+        }
+        .geometric-accent-corner-bottom-right::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 25px;
+            height: 25px;
+            border-bottom: 3px solid var(--copper-color);
+            border-right: 3px solid var(--copper-color);
         }
     </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'copper-main': '#d97706', /* A rich copper/amber shade */
+                        'copper-light': '#fcd34d', /* Lighter copper for subtle highlights */
+                    },
+                }
+            }
+        }
+    </script>
 </head>
-<body class="overflow-hidden">
-    <div class="fixed w-[1600px] h-[900px] bg-[#F8F8F8] font-sans text-[#1A2A4A] flex flex-col p-16">
-        <!-- Top Row: Logos -->
-        <div class="flex justify-between items-start mb-10">
-            <!-- Top-left branding -->
-            <div class="flex items-center">
-                <img src="../examplate_template/logo/roboai_logo.png" alt="RoboAI Logo" class="h-16 object-contain">
-            </div>
-            <!-- Top-right branding -->
-            <div class="flex items-center">
-                <img src="../examplate_template/logo/samk_logo.png" alt="SAMK Logo" class="h-16 object-contain">
+<body class="m-0 p-0">
+    <div class="w-[1920px] h-[1080px] relative overflow-hidden bg-quiet-texture text-stone-100" style="--copper-color: #d97706;">
+
+        <!-- Top-Center Branding Strip -->
+        <div class="absolute top-0 left-0 right-0 h-[80px] flex items-center justify-center z-20 bg-black bg-opacity-30">
+            <div class="flex space-x-12">
+                <img src="../examplate_template/logo/roboai_logo.png" alt="ROBOAI Logo" class="h-[60px] object-contain">
+                <img src="../examplate_template/logo/samk_logo.png" alt="SAMK Logo" class="h-[60px] object-contain">
             </div>
         </div>
 
-        <!-- Main Content Area: Title, Text, Image -->
-        <div class="flex flex-col flex-grow">
-            <!-- Title Zone -->
-            <div class="mb-10">
-                <h1 class="text-5xl font-bold leading-tight text-[#1A2A4A] pr-12">Ergonomics in food preparation exploring robotic solutions for commercial kitchens</h1>
-                <h2 class="text-3xl font-medium text-[#6A9E9C] mt-3 pr-12">RoboAI Academy project on robotic automation for Pori central kitchen</h2>
-            </div>
+        <!-- Main Content Area - Central Card Composition -->
+        <div class="absolute top-[160px] left-[100px] w-[1720px] h-[800px] bg-stone-800 rounded-lg shadow-2xl z-10 p-12 flex flex-col items-center"
+             style="box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);"
+        >
+            <!-- Floating Title -->
+            <h1 class="font-serif text-6xl font-bold text-stone-100 absolute top-[-60px] left-1/2 -translate-x-1/2 text-center w-[1200px] leading-tight drop-shadow-lg"
+                style="text-shadow: 2px 2px 6px rgba(0,0,0,0.6);">
+                Tutkitaan Robottihitsauksella tehokkuutta teollisuuteen
+            </h1>
 
-            <!-- Horizontal Three Zone: Text Left, Image Right -->
-            <div class="flex flex-grow gap-12">
-                <!-- Text Zone (55%) -->
-                <div class="w-[55%] flex flex-col justify-start">
-                    <div class="bg-white p-10 rounded-lg shadow-sm h-full flex flex-col justify-between">
-                        <p class="text-2xl leading-relaxed text-[#1A2A4A]">
-                            On 23.1.2026 a student team from the RoboAI Academy investigated ergonomic solutions for food preparation at the City of Pori's central kitchen by analyzing robotic automation for transferring cooked food. The simulation results indicated that full automation was impractical due to cost and speed, suggesting improvements like refined kettle mechanisms and assistive devices instead. These outcomes provide a reference for the city to evaluate future ergonomic and automation improvements in its kitchen facilities.
-                        </p>
-                    </div>
+            <!-- Subtitle -->
+            <h2 class="font-serif text-3xl text-copper-main mt-16 text-center w-full mb-8">
+                Satakunnan pk-yritysten robottihitsausprojekti
+            </h2>
+
+            <div class="flex justify-center items-start gap-16 w-full h-full">
+                <!-- Image Panel (55%) -->
+                <div class="w-[55%] relative p-4 bg-stone-700 rounded-lg shadow-xl border-4 border-copper-light"
+                     style="box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2); transform: rotate(-1deg); margin-top: 20px;">
+                    <img src="../image/Tutkitaan Robottihitsauksella tehokkuutta teollisuuteen/download_image1.png"
+                         alt="Robottihitsauslaitteisto" class="w-full h-full object-cover rounded-md"
+                         style="transform: rotate(1deg);">
+                    <!-- Geometric accents for the image frame -->
+                    <div class="absolute top-[-4px] left-[-4px] w-8 h-8 border-t-4 border-l-4 border-copper-main"></div>
+                    <div class="absolute bottom-[-4px] right-[-4px] w-8 h-8 border-b-4 border-r-4 border-copper-main"></div>
                 </div>
 
-                <!-- Image Zone (40%) -->
-                <div class="w-[40%] flex flex-col justify-start">
-                    <div class="bg-white p-6 rounded-lg shadow-sm border-4 border-[#6A9E9C] h-full flex items-center justify-center">
-                        <img src="../image/Ergonomics in food preparation exploring robotic solutions for commercial kitchens/download_image1.png" alt="Robotic solutions in a commercial kitchen" class="max-h-full max-w-full object-contain rounded">
+                <!-- Text Panels (45%) -->
+                <div class="w-[45%] flex flex-col space-y-8 mt-8">
+                    <div class="relative bg-stone-700 p-8 rounded-lg shadow-md text-stone-200 text-lg leading-relaxed geometric-accent-corner-top-left geometric-accent-corner-bottom-right">
+                        <p class="font-sans">Uutinen kertoo robottihitsauksesta teollisuuden tehostamisessa Satakunnassa.</p>
+                    </div>
+                    <div class="relative bg-stone-700 p-8 rounded-lg shadow-md text-stone-200 text-lg leading-relaxed geometric-accent-corner-top-left geometric-accent-corner-bottom-right">
+                        <p class="font-sans">Robottihitsaus on teollisuusautomaation merkittävä sovellus, mutta investointikustannukset voivat estää sen käyttöönottoa pienissä yrityksissä.</p>
+                    </div>
+                    <div class="relative bg-stone-700 p-8 rounded-lg shadow-md text-stone-200 text-lg leading-relaxed geometric-accent-corner-top-left geometric-accent-corner-bottom-right">
+                        <p class="font-sans">EU hanke tukee pk-yritysten kilpailukykyä ja kestävää kasvua Satakunnan alueella.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- QR Zone: Separate Lower Info Block -->
-        <div class="mt-12 flex justify-center w-full">
-            <div class="bg-white p-6 rounded-lg shadow-sm flex items-center space-x-6 border border-gray-200">
-                <img src=".././image/Ergonomics in food preparation exploring robotic solutions for commercial kitchens/qr_code.png" alt="QR Code" class="h-24 w-24 object-contain">
-                <span class="text-2xl font-medium text-[#1A2A4A]">Scan to learn more about the project</span>
+        <!-- Separate Lower Info Block for QR Code -->
+        <div class="absolute bottom-[40px] right-[100px] w-[320px] h-[160px] bg-stone-700 rounded-lg shadow-xl p-4 flex items-center justify-center space-x-4 border-l-4 border-copper-main">
+            <img src=".././image/Tutkitaan Robottihitsauksella tehokkuuteen teollisuuteen/qr_code.png" alt="QR Code" class="w-[110px] h-[110px] object-contain bg-white p-1 rounded-sm shadow">
+            <div class="text-left">
+                <p class="font-sans text-stone-200 text-sm opacity-90">Lue lisää projektista</p>
+                <p class="font-sans text-copper-light text-xl font-semibold mt-1">Skannaa tästä</p>
             </div>
         </div>
+
     </div>
 </body>
 </html>

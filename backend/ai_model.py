@@ -26,7 +26,7 @@ summarize_template=ChatPromptTemplate(
 )
 
 ollama_model_text="qwen3.5:9b"
-ollama_model_vl="qwen3-vl:8b"
+ollama_model_vl="qwen3-vl:30b"
 
 summarize_model=ChatOllama(model=ollama_model_text)
 summarize_chain=summarize_template|summarize_model
@@ -125,15 +125,23 @@ message = HumanMessage(
 
 
 layout_variance_agent=ChatOllama(model=ollama_model_vl)
-layout_variance_template=ChatPromptTemplate(
-    [
-        ("system",layout_variant_prompt),
-        MessagesPlaceholder('history'),
-        ("human","{input}")
-    ]
-)
-
+layout_variance_template = ChatPromptTemplate.from_messages([
+    ("system", layout_variant_prompt + "\n\nPrevious selected layouts:\n{history}"),
+    ("human", [
+        {"type": "text", "text": "Topic summary:\n{input}"},
+        {"type": "text", "text": "This is the image selected for the PowerPoint slide."},
+        {
+            "type": "file",
+            "file_id": "{selected_image_file_id}",
+            "mime_type": "image/png",
+        },
+    ])
+])
 layout_variant_chain=layout_variance_template|gemini
+
+
+
+
 
 layout_template=ChatPromptTemplate(
     [
@@ -149,10 +157,15 @@ def render_and_get_screenshot(file_path,output_path):
     file_url=f"file://{os.path.abspath(file_path)}"
     with sync_playwright() as p:
         browser=p.firefox.launch(headless=True)
-        page=browser.new_page()
-        
-        page.goto(file_url)
-        page.screenshot(path=output_path, full_page=True)
+        page = browser.new_page(
+            viewport={"width": 1920, "height": 1080},
+            device_scale_factor=2
+        )       
+        print(page.evaluate("document.documentElement.scrollHeight"))
+        print(page.evaluate("document.body.scrollHeight"))
+        page.goto(file_url, wait_until="load")
+        page.wait_for_timeout(500) 
+        page.screenshot(path=output_path)
         browser.close()
 
 def define_the_templay_out(link):
@@ -164,17 +177,23 @@ def define_the_templay_out(link):
     print(summary)
     print(image)
     
-    for i in range(5):
-        variance_respone=layout_variant_chain.invoke(
-            {"history":history_layout,"input":summary}
-            
-        )
+    selected_image=os.path.abspath(os.path.join(image_path,image))
+    selected_image_uploaded = client.files.upload(file=selected_image)
 
-        history_layout.append(AIMessage(variance_respone.content))
-        print(variance_respone.content)
+    print(selected_image_uploaded.uri)
+    for i in range(5):
+        variance_response = layout_variant_chain.invoke({
+            "history": "\n\n".join(history_layout),
+            "input": json.dumps(summary, ensure_ascii=False),
+            "selected_image_file_id": selected_image_uploaded.uri,
+        })
+
+
+        history_layout.append(variance_response.content)
+        print(variance_response.content)
     
         layout_response=layout_chain.invoke({"summary":summary,"input":message.content,
-        "layout_spec":variance_respone.content,
+        "layout_spec":variance_response.content,
         "content_language":summary["language"],
         "main_project_image":os.path.join(image_path,image),
         "qr_code_path":os.path.join(image_path,"qr_code.png")
@@ -183,8 +202,14 @@ def define_the_templay_out(link):
         print(layout_response.content)
         
         html_file=layout_response.content
-        os.makedirs("./website_file",exist_ok=True)
-        html_file_path="./website_file/index.html"
+            
+        html_file = html_file.replace("__MAIN_IMAGE__", f"../{image}")
+        html_file = html_file.replace("__QR_CODE__", f"../qr_code.png")
+        html_file = html_file.replace("__ROBOAI_LOGO__", "../../../examplate_template/logo/roboai_logo.png")
+        html_file = html_file.replace("__SAMK_LOGO__", "../../../examplate_template/logo/samk_logo.png")
+        html_parent_path=os.path.join(image_path,"html_file")
+        os.makedirs(html_parent_path,exist_ok=True)
+        html_file_path=os.path.join(html_parent_path,f"index_slide{i}.html")
 
         with open(html_file_path,"w") as f:
             f.write(html_file)
@@ -192,13 +217,7 @@ def define_the_templay_out(link):
         powerpoint_path=os.path.join(image_path,"powerpoint")
         os.makedirs(powerpoint_path,exist_ok=True)
         render_and_get_screenshot(html_file_path,os.path.join(powerpoint_path,f"slide_{str(i)}.png"))
-            
-            
-        
-        
-        
-    
-    
+
 if __name__ == "__main__":
     define_the_templay_out("https://www.roboai.fi/en/news-en/robodog-monitoring-in-vr/")
     

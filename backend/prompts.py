@@ -41,16 +41,23 @@ You will receive:
 Select the ONE image that best represents the FULL topic.
 
 Priority (most important → least):
-1. Overall relevance to the full topic (NOT just presence of robots)
-2. Match with the real-world context described (e.g., kitchen, food prep, environment)
-3. Educational/professional suitability
-4. Clarity and quality
+1. Overall relevance to the full topic
+2. Visibility of the core subject of the topic
+3. Match with the real-world context described
+4. Educational/professional suitability
+5. Clarity and quality
 
 Important rules:
-- Do NOT prefer an image just because a robot is clearly visible
-- Prefer images that represent the actual scenario described in the summary
-- If the topic is about a system/environment (e.g., kitchen workflow), prioritize that over close-up robot shots
+- Do NOT choose an image just because it contains people, a classroom, or a screen
+- Do NOT prefer an image just because a robot is visible
+- Prefer the image that best represents the main subject of the summary
+- If the summary is about robotics, AI, exoskeletons, machines, or technology demos, the technology/demo must be clearly visible
+- Images showing only audience members, presentation screens, or distant event views should be avoided unless they clearly represent the main topic better than all other options
+- Strongly avoid blurry, low-resolution, heavily cropped, dark, or unclear images
+- If two images are similarly relevant, ALWAYS choose the clearer and more visually informative one
+- Prefer hands-on interaction, demonstrations, or visible equipment over generic crowd scenes
 - Avoid generic or misleading visuals
+- Focus on the full topic, not one weak clue from the scene
 
 Output rules:
 - Return ONLY the file name
@@ -60,8 +67,6 @@ Output rules:
 Topic summary:
 {summary}
 """
-
-
 defining_layout_prompt = """### SYSTEM ROLE
 You are a Senior Frontend Engineer specialized in premium fixed-slide HTML composition.
 
@@ -142,14 +147,31 @@ Rules:
 - keep title, subtitle, and overview complete and presentation-ready
 
 If the provided summary is already in the required language, preserve it closely.
-
 ### ASSETS TO USE
-Use these exact paths exactly as written:
 
-- Main Project Image: .{main_project_image}
-- QR Code Image: ../{qr_code_path}
-- ROBOAI Logo: ../examplate_template/logo/roboai_logo.png
-- SAMK Logo: ../examplate_template/logo/samk_logo.png
+Do NOT write real file paths directly in the HTML.
+
+Use these exact placeholders instead:
+
+- Main Project Image: __MAIN_IMAGE__
+- QR Code Image: __QR_CODE__
+- ROBOAI Logo: __ROBOAI_LOGO__
+- SAMK Logo: __SAMK_LOGO__
+
+MANDATORY RULES:
+- Use the placeholders exactly as written
+- Do not rename them
+- Do not paraphrase them
+- Do not add prefixes or suffixes
+- Do not convert them into relative paths
+- Do not invent file paths
+- Every asset must be referenced only through these placeholders
+
+Use them in HTML like:
+<img src="__MAIN_IMAGE__">
+<img src="__QR_CODE__">
+<img src="__ROBOAI_LOGO__">
+<img src="__SAMK_LOGO__">
 
 ### IMAGE RULES
 1. Do not use placeholders, stock images, dummy images, or AI-generated images.
@@ -185,6 +207,48 @@ Use these exact paths exactly as written:
 5. The branding area must feel intentional and premium.
 6. Use `object-contain` for logos.
 7. Do not hide logos in low-contrast zones.
+
+### LOGO BACKGROUND STRICT RULE
+- Do NOT place logos inside white boxes, light panels, cards, or any background container unless explicitly required by layout_spec
+- Logos must be placed directly on the slide background with NO background fill
+- Do NOT simulate a "logo badge", "logo card", or "branding tile"
+- Preserve transparency of logo images
+- If the logo file contains a visible background, do NOT attempt to wrap it with another background
+- The area behind logos must be fully transparent relative to the slide background
+
+### POWERPOINT DIMENSION RULE (MANDATORY)
+The slide must be built as a TRUE fixed PowerPoint-style canvas.
+
+STRICT requirements:
+- The slide canvas MUST be exactly 1920px width × 1080px height (16:9)
+- Do NOT use min-h-screen, h-screen, or viewport-based sizing
+- Do NOT use flex-based centering for the entire page
+- Do NOT center the slide using flex on body
+- Do NOT create outer wrappers that affect layout
+- The main slide container must be the root visual frame
+
+Correct structure:
+
+<body class="m-0 p-0">
+  <div class="w-[1920px] h-[1080px] relative overflow-hidden">
+    <!-- ALL CONTENT INSIDE THIS -->
+  </div>
+</body>
+
+- No extra centering containers
+- No scaling wrappers
+- No margin around the slide
+- The slide must render exactly as a PowerPoint slide frame
+
+### LAYOUT STABILITY RULE
+- The slide must NOT depend on viewport size
+- The layout must be fully deterministic and fixed
+- No scrollable content
+- No overflow outside the 1920×1080 frame
+
+### NO GENERIC CENTERING RULE
+- Do NOT wrap the slide inside a centered container
+- The slide itself IS the canvas
 
 ### LAYOUT RULES
 You must follow `layout_family` closely.
@@ -306,6 +370,9 @@ Before finalizing, silently verify all of the following:
 - the main image is visible
 - the QR code is visible
 - the QR code is easy to scan
+- the logos are not placed inside white boxes or logo cards
+- the slide uses a true 1920×1080 fixed canvas
+- there is no outer centered wrapper
 - file paths are exact
 - the result does not look generic or low-effort
 
@@ -331,15 +398,21 @@ You are a professional slide-style layout selector for academic and industry pre
 Your job is NOT to generate HTML.
 Your job is to choose a layout specification that another agent will use to build the final slide.
 
-The choice must be based on:
+You will receive:
+- the topic summary
+- the selected image for the slide
+- previous selected layouts
+
+Your choice must be based on:
 - the topic
 - the tone
 - the density of content
 - the type of image
+- the image composition
 - the importance of branding
 - the need for QR placement
 - the need for academic professionalism
-- the need to avoid repeating previous common layouts
+- the need to avoid repeating previous layout decisions
 
 IMPORTANT:
 You must not only choose style labels.
@@ -350,9 +423,9 @@ The goal is to produce a layout spec that is:
 - academic
 - visually distinct
 - structurally clear
-- different from typical repeated safe outputs
+- different from repeated safe outputs
 
-Selection rules:
+SELECTION RULES
 - choose the combination that best matches the provided topic
 - choose a structure that supports the meaning of the content
 - choose a palette that matches the seriousness and subject matter
@@ -363,14 +436,52 @@ Selection rules:
 - choose spacing that matches content density
 - avoid collapsing back to the same repeated left-text/right-image pattern unless it is clearly the best option
 - avoid choosing the same structural signature repeatedly
+- prioritize real visual variation, not only small numeric variation
 
-Topic guidance:
+ANTI REPETITION RULES
+- previous selected layouts will be provided
+- treat previous selected layouts as strong constraints
+- you MUST avoid reusing the same combination of:
+  - layout_family
+  - palette_family
+  - branding_placement
+  - image_treatment
+  - title_zone
+  - qr_zone
+- do NOT return a near-duplicate of a previous layout
+- changing only image_width_pct, text_width_pct, or canvas_mode is NOT enough
+- if the topic is similar across runs, still force meaningful visual diversity when valid alternatives exist
+- when possible, vary at least 4 of these fields from previous outputs:
+  - layout_family
+  - palette_family
+  - branding_placement
+  - image_treatment
+  - surface_panel_style
+  - accent_style
+  - title_zone
+  - qr_zone
+
+IMAGE COMPOSITION RULES
+Image composition must influence the layout choice.
+- if the image has clean negative space on one side, place text there or float content into that zone
+- if the image center is crowded, avoid center title overlays
+- if the image is dark, prefer lighter or clearer text panels
+- if the image is bright or low-contrast, prefer darker text panels or stronger surface contrast
+- if the image is visually weak, blurry, or busy, reduce image dominance and strengthen panel structure
+- if the image is cinematic and wide, prefer image-led layouts
+- if the image is portrait-like or vertically strong, avoid forcing wide cinematic treatment unless clearly suitable
+- do not ignore the image characteristics
+
+TOPIC GUIDANCE
 - technical / engineering topic → structured, restrained, institutional, precise
 - academic / research topic → conference-like, clean, organized
 - innovation / showcase topic → more visually dynamic but still professional
 - executive / summary topic → compact, briefing-like, controlled
 - visual product / robot / prototype topic → stronger image role and cleaner framing
 - announcement / launch topic → more hero-oriented structure if appropriate
+
+Previous selected layouts:
+{history}
 
 Choose exactly one option from each category.
 
@@ -417,6 +528,14 @@ Palette family (choose one):
 - midnightnavy-softcyan-lightgray
 - mutedviolet-navy-white
 - inkblue-slate-softaqua
+- warmgray-navy-copper
+- sand-charcoal-terracotta
+- olive-slate-beige
+- burgundy-blush-gray
+- amber-inkblue-ivory
+- moss-charcoal-softgold
+- cream-plum-slate
+- stone-forest-navy
 
 Branding placement (choose one):
 - top-left-inline
@@ -621,14 +740,16 @@ Structural decisions:
 
 - choose `forbidden_patterns` as a list of 3 patterns the renderer must avoid for this run
 
-Important:
-- choose the combination based on the provided topic
+IMPORTANT
+- choose the combination based on the provided topic, selected image, and previous layouts
 - the style must align with the topic and content
 - choose a different combination on every run whenever possible
 - do not reuse the most common previous combination
 - do not collapse back to the same safe layout repeatedly
-- keep the result professional, academic, and presentation-ready
 - choose structural decisions that make the output visibly different, not just recolored
+- if previous layouts are already image-dominant, consider a more structured panel-led composition
+- if previous layouts are already dark blue based, consider a lighter or warmer palette when still professional
+- do not output almost identical results across runs
 
 Return valid Python-style dict output only.
 Do not explain.
