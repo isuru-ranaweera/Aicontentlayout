@@ -198,24 +198,36 @@ Use them in HTML like:
    - "More information"
    The label must follow `content_language`.
 10. Preserve the QR code image exactly enough for easy scanning.
+### LOGO CONTRAST RULES
+- The logos must remain clearly visible against the background.
+- If a logo is light or white, place it only on a dark enough background region.
+- If a logo is dark, place it only on a light enough background region.
+- Do NOT place a logo on a low-contrast area.
+- Do NOT assume the logo will remain visible automatically.
+- Before finalizing, verify that both logos have strong visual contrast against the exact background behind them.
 
-### LOGO RULES
-1. Both logos must be clearly visible.
-2. Logos must not be tiny.
-3. Logos must not be oversized.
-4. Logo placement must follow `branding_placement`.
-5. The branding area must feel intentional and premium.
-6. Use `object-contain` for logos.
-7. Do not hide logos in low-contrast zones.
+### LOGO PLACEMENT FALLBACK RULE
+- If the selected branding placement would put the logo on a low-contrast area, you must adjust the nearby background tone locally while preserving the overall layout style.
+- This local adjustment must be subtle and integrated into the slide background, not a white logo card or badge.
+- Acceptable solutions include:
+  - darkening a strip behind a light logo
+  - using a darker corner region
+  - placing the logo in a naturally dark background zone
+- Unacceptable solutions include:
+  - random white rectangles behind logos
+  - fake badge cards
+  - low-contrast placement
+### LOGO VISIBILITY PRIORITY RULE
+Logo visibility has higher priority than decorative purity.
 
-### LOGO BACKGROUND STRICT RULE
-- Do NOT place logos inside white boxes, light panels, cards, or any background container unless explicitly required by layout_spec
-- Logos must be placed directly on the slide background with NO background fill
-- Do NOT simulate a "logo badge", "logo card", or "branding tile"
-- Preserve transparency of logo images
-- If the logo file contains a visible background, do NOT attempt to wrap it with another background
-- The area behind logos must be fully transparent relative to the slide background
+If the default branding placement creates weak contrast, you must preserve visibility first.
+Do this by choosing a darker or lighter local background region that feels integrated with the slide design.
+Do not leave a logo low-contrast just to preserve minimalism.
 
+### LOGO ASSET AWARENESS RULE
+Assume the provided logos may be light colored with transparency.
+Design the branding area accordingly.
+Never place a light logo on a light background or a dark logo on a dark background.
 ### POWERPOINT DIMENSION RULE (MANDATORY)
 The slide must be built as a TRUE fixed PowerPoint-style canvas.
 
@@ -265,6 +277,23 @@ Do not merely mention the layout internally.
 Make it visually obvious.
 
 The QR code must be placed in a way that matches the chosen layout family.
+
+
+### FIT & OVERFLOW RULE (CRITICAL)
+ALL content must be fully visible within 1920×1080.
+
+If content is too large:
+- reduce font sizes
+- reduce spacing
+- reduce padding
+- adjust layout density
+
+NEVER allow:
+- cropped text
+- hidden panels
+- overflow below frame
+
+Fit is MORE IMPORTANT than dramatic typography.
 
 ### COLOR RULES
 You must follow `palette_family`.
